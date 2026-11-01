@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YourDOST Next Step (prototype)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">YD</span>
+      <div>
+        <div class="brand-name">YourDOST <span>Next Step</span></div>
+        <div class="brand-sub">Find the right support, one step at a time</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="badge">Prototype · synthetic data</span>
+      <button class="btn ghost" id="btn-tests" aria-expanded="false" aria-controls="tests-panel">Test cases</button>
+      <button class="btn ghost" id="btn-restart">Start over</button>
+    </div>
+  </header>
+
+  <aside class="tests-panel" id="tests-panel" hidden>
+    <div class="tests-head">
+      <div>
+        <h2>Test cases</h2>
+        <p>Load a case, then click the follow-up answers shown in the yellow hint. <a href="test-runner.html">Run all automatically →</a></p>
+      </div>
+      <button class="btn ghost" id="btn-close-tests" aria-label="Close test cases">Close</button>
+    </div>
+    <ol class="tests-list" id="tests-list"></ol>
+  </aside>
+
+  <main class="app">
+    <div class="hint" id="hint" hidden></div>
+    <section class="chat" id="chat" aria-live="polite"></section>
+    <section class="composer" id="composer"></section>
+  </main>
+
+  <footer class="foot">
+    Prototype for a product assignment. Not affiliated with or operated by YourDOST. All counselors, services and articles are fictional.
+    In an emergency in India, call <strong>112</strong> or Tele-MANAS <strong>14416</strong>.
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="engine.js"></script>
+  <script src="tests.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

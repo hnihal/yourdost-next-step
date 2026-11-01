@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test runner · Next Step prototype</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 20px 16px 40px; }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #faf9f6; font-weight: 600; }
+    .pass { color: var(--brand-ink); font-weight: 700; }
+    .fail { color: var(--care); font-weight: 700; }
+    .summary { font-size: 18px; margin: 8px 0 16px; }
+    .in { color: var(--ink-2); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><a href="index.html">← Back to the prototype</a></p>
+    <h1 style="margin:0 0 4px">Automated test run</h1>
+    <p style="margin:0;color:var(--ink-2)">Runs every test case through the same engine the app uses and compares the result with what's expected.</p>
+    <div class="summary" id="summary"></div>
+    <table>
+      <thead><tr><th>Case</th><th>Input &amp; answers</th><th>Expected</th><th>Actual</th><th>Result</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <script src="data.js"></script>
+  <script src="engine.js"></script>
+  <script src="tests.js"></script>
+  <script>
+    (function () {
+      const E = window.YD_ENGINE, T = window.YD_TESTS;
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      let pass = 0;
+      document.getElementById("rows").innerHTML = T.map((t) => {
+        const r = E.run(t), e = t.expect;
+        let ok = r.crisis === e.crisis, actual;
+        if (r.crisis) {
+          actual = "Crisis screen (matched: " + r.analysis.crisisMatches.join(", ") + ")";
+        } else {
+          const p = r.result.primary;
+          ok = ok && r.result.concern === e.concern && p.id === e.primary;
+          if (e.counselor) ok = ok && p.counselor && p.counselor.name === e.counselor;
+          if (e.urgent) ok = ok && r.result.urgent;
+          actual = r.result.concernLabel + " → " + p.title + (r.result.urgent ? " (priority)" : "") + "<br><small>Rule: " + esc(r.result.rule) + "</small>";
+        }
+        if (ok) pass++;
+        const ans = e.crisis ? "—" : t.answers.impact + " / " + t.answers.preference;
+        return "<tr><td><strong>" + t.id + "</strong><br>" + esc(t.name) + "</td>" +
+          "<td><span class='in'>" + (t.text ? "“" + esc(t.text) + "”" : "(chips: " + esc(t.chips.join(", ")) + ")") + "</span><br><small>Answers: " + ans + "</small></td>" +
+          "<td>" + esc(t.expectText) + "</td><td>" + actual + "</td>" +
+          "<td class='" + (ok ? "pass" : "fail") + "'>" + (ok ? "PASS" : "FAIL") + "</td></tr>";
+      }).join("");
+      document.getElementById("summary").innerHTML = "<span class='" + (pass === T.length ? "pass" : "fail") + "'>" + pass + " / " + T.length + " passed</span>";
+    })();
+  </script>
+</body>
+</html>
